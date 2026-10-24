@@ -1,0 +1,32 @@
+name: Build GiantQuake
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Extract source
+        run: |
+          mkdir source
+          unzip -o GiantQuake-1.20.1-Forge-GitHub-build.zip -d source
+          find source -name build.gradle
+
+      - name: Build mod
+        run: |
+          cd "$(find source -name build.gradle -printf '%h\n' | head -1)"
+          gradle --no-daemon build
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GiantQuake-JAR
+          path: source/**/build/libs/*.jar
