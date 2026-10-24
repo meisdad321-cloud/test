@@ -24,7 +24,8 @@ jobs:
       - name: Build mod
         run: |
           cd "$(find source -name build.gradle -printf '%h\n' | head -1)"
-          gradle --no-daemon build
+          gradle wrapper --gradle-version 8.8
+          ./gradlew --no-daemon build
 
       - uses: actions/upload-artifact@v4
         with:
